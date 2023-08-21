@@ -3,6 +3,7 @@ package dev.emanoel.loja.model;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
@@ -15,6 +16,8 @@ public class Pedido {
     private LocalDate data = LocalDate.now();
     @ManyToOne
     private Cliente cliente;
+    @OneToMany
+    private List<ItemPedido> produtos;
 
     public Pedido() {
     }
