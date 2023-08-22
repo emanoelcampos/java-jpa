@@ -1,7 +1,7 @@
 package dev.emanoel.loja.dao;
 
 import dev.emanoel.loja.model.Pedido;
-import dev.emanoel.loja.model.Produto;
+import dev.emanoel.loja.vo.RelatorioDeVendasVo;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -23,6 +23,21 @@ public class PedidoDAO {
         String jpql = "SELECT SUM(p.valorTotal) FROM Pedido p";
         return entityManager.createQuery(jpql, BigDecimal.class)
                 .getSingleResult();
+    }
+
+
+    public List<RelatorioDeVendasVo> relatorioDeVendas() {
+        String jpql = "SELECT new dev.emanoel.loja.vo.RelatorioDeVendasVo" +
+                "(produto.nome, " +
+                "SUM(item.quantidade), " +
+                "MAX(pedido.data)) " +
+                "FROM Pedido pedido " +
+                "JOIN pedido.itens item " +
+                "JOIN item.produto produto " +
+                "GROUP BY produto.nome " +
+                "ORDER BY item.quantidade DESC";
+        return entityManager.createQuery(jpql, RelatorioDeVendasVo.class)
+                .getResultList();
     }
 
 }
