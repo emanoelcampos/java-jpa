@@ -19,4 +19,10 @@ public class PedidoDAO {
         this.entityManager.persist(pedido);
     }
 
+    public BigDecimal valorTotalVendido() {
+        String jpql = "SELECT SUM(p.valorTotal) FROM Pedido p";
+        return entityManager.createQuery(jpql, BigDecimal.class)
+                .getSingleResult();
+    }
+
 }
