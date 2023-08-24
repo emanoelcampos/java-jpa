@@ -40,4 +40,10 @@ public class PedidoDAO {
                 .getResultList();
     }
 
+    public Pedido buscarPedidoComCliente(Long id) {
+        return entityManager.createQuery("SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.id = :id", Pedido.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
 }
