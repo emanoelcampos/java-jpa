@@ -1,10 +1,13 @@
 package dev.emanoel.loja.dao;
 
 import dev.emanoel.loja.model.Pedido;
+import dev.emanoel.loja.model.Produto;
 import dev.emanoel.loja.vo.RelatorioDeVendasVo;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class PedidoDAO {
@@ -44,6 +47,32 @@ public class PedidoDAO {
         return entityManager.createQuery("SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.id = :id", Pedido.class)
                 .setParameter("id", id)
                 .getSingleResult();
+    }
+
+    public List<Produto> buscarPorParametros(String nome, BigDecimal preco, LocalDate  dataCadastro) {
+        String jpql = "SELECT p FROM Produto p WHERE 1=1 ";
+        if(nome != null && !nome.trim().isEmpty()) {
+            jpql = " AND p.nome = :nome ";
+        }
+        if(preco != null) {
+            jpql = " AND p.preco = :preco ";
+        }
+        if(dataCadastro != null) {
+            jpql = " AND p.dataCadastro = :dataCadastro ";
+        }
+
+        TypedQuery<Produto> query = entityManager.createQuery(jpql, Produto.class);
+        if(nome != null && !nome.trim().isEmpty()) {
+            query.setParameter("nome", nome);
+        }
+        if(preco != null) {
+            query.setParameter("preco", preco);
+        }
+        if(dataCadastro != null) {
+            query.setParameter("dataCadastro", dataCadastro);
+        }
+
+        return query.getResultList();
     }
 
 }
